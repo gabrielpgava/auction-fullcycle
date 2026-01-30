@@ -49,7 +49,26 @@ func (au *AuctionUseCase) FindAuctions(
 		})
 	}
 
-	return auctionOutputs, nil
+	filterdAuctionsStatus := make([]AuctionOutputDTO, 0)
+	for _, auction := range auctionOutputs {
+		if auction.Status != status {
+			continue
+		}
+		filterdAuctionsStatus = append(filterdAuctionsStatus, auction)
+	}
+
+	filterdAuctions := make([]AuctionOutputDTO, 0)
+	for _, auction := range filterdAuctionsStatus {
+		if category != "" && auction.Category != category {
+			continue
+		}
+		if productName != "" && auction.ProductName != productName {
+			continue
+		}
+		filterdAuctions = append(filterdAuctions, auction)
+	}
+
+	return filterdAuctions, nil
 }
 
 func (au *AuctionUseCase) FindWinningBidByAuctionId(

@@ -28,17 +28,17 @@ Content-Type: application/json
 
 {
     "user_id": "550e8400-e29b-41d4-a716-446655440001",
-    "auction_id": "6bc77fc6-4894-4a5d-8ce0-4f0ab28cfdf1",
-    "amount": 5501.00
+    "auction_id": "e7ebbc2a-cb3d-4819-bc55-ad37eb352419",
+    "amount": 5521.00
 }
 
 
 ### Get Bids By Auction ID
-GET {{baseUrl}}/bid/6bc77fc6-4894-4a5d-8ce0-4f0ab28cfdf1
+GET {{baseUrl}}/bid/e7ebbc2a-cb3d-4819-bc55-ad37eb352419
 ###
 
 ### Get Winning Bid By Auction ID
-GET {{baseUrl}}/auction/winner/6bc77fc6-4894-4a5d-8ce0-4f0ab28cfdf1
+GET {{baseUrl}}/auction/winner/e7ebbc2a-cb3d-4819-bc55-ad37eb352419
 ###
 
 

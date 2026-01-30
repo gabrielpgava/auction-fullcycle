@@ -3,6 +3,7 @@ package bid_usecase
 import (
 	"context"
 	"fullcycle-auction_go/configuration/logger"
+	"fullcycle-auction_go/internal/entity/auction_entity"
 	"fullcycle-auction_go/internal/entity/bid_entity"
 	"fullcycle-auction_go/internal/internal_error"
 	"os"
@@ -25,7 +26,8 @@ type BidOutputDTO struct {
 }
 
 type BidUseCase struct {
-	BidRepository bid_entity.BidEntityRepository
+	BidRepository     bid_entity.BidEntityRepository
+	AuctionRepository auction_entity.AuctionRepositoryInterface
 
 	timer               *time.Timer
 	maxBatchSize        int
@@ -33,12 +35,13 @@ type BidUseCase struct {
 	bidChannel          chan bid_entity.Bid
 }
 
-func NewBidUseCase(bidRepository bid_entity.BidEntityRepository) BidUseCaseInterface {
+func NewBidUseCase(bidRepository bid_entity.BidEntityRepository, auctionRepository auction_entity.AuctionRepositoryInterface) BidUseCaseInterface {
 	maxSizeInterval := getMaxBatchSizeInterval()
 	maxBatchSize := getMaxBatchSize()
 
 	bidUseCase := &BidUseCase{
 		BidRepository:       bidRepository,
+		AuctionRepository:   auctionRepository,
 		maxBatchSize:        maxBatchSize,
 		batchInsertInterval: maxSizeInterval,
 		timer:               time.NewTimer(maxSizeInterval),
@@ -104,6 +107,16 @@ func (bu *BidUseCase) triggerCreateRoutine(ctx context.Context) {
 func (bu *BidUseCase) CreateBid(
 	ctx context.Context,
 	bidInputDTO BidInputDTO) *internal_error.InternalError {
+
+	// Validar se a auction existe e está ativa
+	auctionEntity, err := bu.AuctionRepository.FindAuctionById(ctx, bidInputDTO.AuctionId)
+	if err != nil {
+		return err
+	}
+
+	if auctionEntity.Status != auction_entity.Active {
+		return internal_error.NewBadRequestError("Auction is not active")
+	}
 
 	bidEntity, err := bid_entity.CreateBid(bidInputDTO.UserId, bidInputDTO.AuctionId, bidInputDTO.Amount)
 	if err != nil {

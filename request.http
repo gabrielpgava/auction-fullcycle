@@ -1,0 +1,44 @@
+@baseUrl = http://localhost:8080
+
+## Create Auction
+POST {{baseUrl}}/auction
+Content-Type: application/json
+
+{
+
+    "product_name": "iPhone 15 Pro Max",
+    "category": "Eletrônicos",
+    "description": "Smartphone Apple iPhone 15 Pro Max 256GB, Titânio Natural, Tela de 6.7, Câmera Tripla de 48MP",
+    "condition": 0
+}
+
+
+### Get All Auctions (com filtros opcionais)
+GET {{baseUrl}}/auction
+# Filtros disponíveis: ?status=0&category=Eletrônicos&productName=iPhone
+
+
+### Get All Auctions - Filtro por status (0=Active, 1=Completed)
+GET {{baseUrl}}/auction?status=0
+
+
+### Create Bid (substitua userId e auctionId)
+POST {{baseUrl}}/bid
+Content-Type: application/json
+
+{
+    "user_id": "550e8400-e29b-41d4-a716-446655440001",
+    "auction_id": "6bc77fc6-4894-4a5d-8ce0-4f0ab28cfdf1",
+    "amount": 5501.00
+}
+
+
+### Get Bids By Auction ID
+GET {{baseUrl}}/bid/6bc77fc6-4894-4a5d-8ce0-4f0ab28cfdf1
+###
+
+### Get Winning Bid By Auction ID
+GET {{baseUrl}}/auction/winner/6bc77fc6-4894-4a5d-8ce0-4f0ab28cfdf1
+###
+
+
